@@ -162,3 +162,85 @@ INSERT INTO acces_a_compte (id_client,id_compte, droit_lecture_ecriture) VALUES(
 SELECT * from clients;
 SELECT * from comptes;
 SELECT * from journal;
+
+#Labo 2 Etape 2
+
+SET @@autocommit=0;
+
+DELIMITER $$
+CREATE PROCEDURE transferer1(IN cpt1 VARCHAR(30), IN cpt2 VARCHAR(30), IN montant FLOAT)
+BEGIN
+	DECLARE etat FLOAT DEFAULT 0.0;
+    SELECT solde FROM comptes WHERE no = cpt1 INTO etat;
+    SET etat = etat - montant;
+    UPDATE comptes SET solde = etat WHERE no = cpt1;
+    
+    SELECT solde FROM comptes WHERE no = cpt2 INTO etat;
+    SET etat = etat + montant;
+    UPDATE comptes SET solde = etat WHERE no = cpt2;
+END
+$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE transferer2(IN cpt1 VARCHAR(30), IN cpt2 VARCHAR(30), IN montant FLOAT)
+BEGIN
+	DECLARE etat FLOAT DEFAULT 0.0;
+	START TRANSACTION;
+		SELECT solde FROM comptes WHERE no = cpt1 INTO etat;
+		SET etat = etat - montant;
+		UPDATE comptes SET solde = etat WHERE no = cpt1;
+		
+		SELECT solde FROM comptes WHERE no = cpt2 INTO etat;
+		SET etat = etat + montant;
+		UPDATE comptes SET solde = etat WHERE no = cpt2;
+    COMMIT;
+END
+$$
+DELIMITER ;
+
+##continue ici bleddard
+
+DELIMITER $$
+CREATE PROCEDURE transferer3(IN cpt1 VARCHAR(30), IN cpt2 VARCHAR(30), IN montant FLOAT)
+BEGIN
+	START TRANSACTION;
+		DECLARE etat FLOAT DEFAULT 0.0;
+        SELECT solde FROM comptes WHERE no = cpt1 LOCK IN SHARE MODE;
+		SELECT solde FROM comptes WHERE no = cpt1 INTO etat;
+		SET etat = etat - montant;
+		UPDATE comptes SET solde = etat WHERE no = cpt1;
+		
+        SELECT solde FROM comptes WHERE no = cpt2 LOCK IN SHARE MODE;
+		SELECT solde FROM comptes WHERE no = cpt2 INTO etat;
+		SET etat = etat + montant;
+		SELECT solde FROM comptes WHERE no = cpt2 FOR UPDATE;
+		UPDATE comptes SET solde = etat WHERE no = cpt2;
+    COMMIT;
+END
+$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE transferer4(IN cpt1 VARCHAR(30), IN cpt2 VARCHAR(30), IN montant FLOAT)
+BEGIN
+	START TRANSACTION;
+		DECLARE etat FLOAT DEFAULT 0.0;
+		SELECT solde FROM comptes WHERE no = cpt1 INTO etat;
+		SET etat = etat - montant;
+		UPDATE comptes SET solde = etat WHERE no = cpt1;
+		
+		SELECT solde FROM comptes WHERE no = cpt2 INTO etat;
+		SET etat = etat + montant;
+		UPDATE comptes SET solde = etat WHERE no = cpt2;
+    COMMIT;
+END
+$$
+DELIMITER ;
+
+
+
+
+
+
+
