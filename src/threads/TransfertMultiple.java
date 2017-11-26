@@ -12,6 +12,7 @@ public class TransfertMultiple {
         try {
             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/transactions?noAccessToProcedureBodies=true",utilisateur,"");
             con.setAutoCommit(false);
+            //con.setTransactionIsolation();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -26,7 +27,8 @@ public class TransfertMultiple {
                     cs.setString(1, compte_source);
                     cs.setString(2, compte_dest);
                     cs.setFloat(3, montant);
-                    cs.executeQuery();
+                    cs.execute();
+                    //con.commit();
                 } catch (SQLException e) {
                     if(e.getSQLState().equals("40001")){
                         try{

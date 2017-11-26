@@ -165,7 +165,7 @@ SELECT * from journal;
 
 #Labo 2 Etape 2
 
-SET @@autocommit=0;
+##SET @@autocommit=0;
 
 DELIMITER $$
 CREATE PROCEDURE transferer1(IN cpt1 VARCHAR(30), IN cpt2 VARCHAR(30), IN montant FLOAT)
@@ -276,5 +276,5 @@ GRANT EXECUTE
 ON PROCEDURE transferer4
 TO U1@'localhost', U1@'%', U2@'localhost', U2@'%';
 
-call transferer1("cpt_a", "cpt_b", 50.0);
+call transferer2("cpt_a", "cpt_b", 50.0);
 SELECT * from comptes;
