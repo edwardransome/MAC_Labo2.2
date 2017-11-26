@@ -106,8 +106,8 @@ public class Main {
             e.printStackTrace();
         }
         boolean coherence = (montantDepartCompte1+montantDepartCompte2) == (montantFinCompte1 + montantFinCompte2);
-        //Write a new line to CSV! you can do it spi
-        //procedure, isolationlevel, iterations, timetorun, interblocages, coherence
+
+        //Ecriture des resultats dans le fichier csv en format csv
         String data[] = {procedure,
                 String.valueOf(niveauIsolation),
                 String.valueOf(NB_ITERATIONS),
