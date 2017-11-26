@@ -1,10 +1,12 @@
+import com.mysql.jdbc.StringUtils;
 import threads.TransfertMultiple;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
-import java.util.Locale;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import static java.sql.Connection.*;
 
@@ -16,6 +18,7 @@ public class Main {
     static final String U2 = "U1";
     static final String COMPTE_1 = "cpt_a";
     static final String COMPTE_2 = "cpt_b";
+    static final String PATH_RESULT = "../result.csv";
 
     static Connection connection;
     static PrintWriter printWriter;
@@ -27,7 +30,7 @@ public class Main {
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/transactions?noAccessToProcedureBodies=true","root","");
 
             //creation d'un writer pour ecrire les resultats en format csv
-            printWriter  = new PrintWriter(new FileWriter("..\\result.txt"));
+            printWriter  = new PrintWriter(new FileWriter(PATH_RESULT));
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -105,7 +108,15 @@ public class Main {
         boolean coherence = (montantDepartCompte1+montantDepartCompte2) == (montantFinCompte1 + montantFinCompte2);
         //Write a new line to CSV! you can do it spi
         //procedure, isolationlevel, iterations, timetorun, interblocages, coherence
-        printWriter.print("A");
+        String data[] = {procedure,
+                String.valueOf(niveauIsolation),
+                String.valueOf(NB_ITERATIONS),
+                String.valueOf(duree),
+                String.valueOf(tm1.getNombreBlocages()),
+                String.valueOf(coherence)};
+
+                String dataCSV = Arrays.stream(data).map(Object::toString).collect(Collectors.joining(","));
+        printWriter.println(dataCSV);
     }
 
     /**
