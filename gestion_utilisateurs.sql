@@ -259,6 +259,7 @@ END
 $$
 DELIMITER ;
 
+
 GRANT EXECUTE
 ON PROCEDURE transferer1
 TO U1@'localhost', U1@'%', U2@'localhost', U2@'%';
@@ -275,4 +276,5 @@ GRANT EXECUTE
 ON PROCEDURE transferer4
 TO U1@'localhost', U1@'%', U2@'localhost', U2@'%';
 
-SELEcT * from comptes
+call transferer1("cpt_a", "cpt_b", 50.0);
+SELECT * from comptes;

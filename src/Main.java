@@ -5,7 +5,7 @@ import java.sql.*;
 public class Main {
 
     public static void main(String[] args) {
-        TransfertMultiple unTransfertMultiple = new TransfertMultiple("U1");
+        TransfertMultiple unTransfertMultiple = new TransfertMultiple("U2");
         unTransfertMultiple.demarrer("cpt_a","cpt_b",50,100,"transferer1");
     }
 
