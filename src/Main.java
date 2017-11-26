@@ -4,6 +4,10 @@ import java.sql.*;
 
 public class Main {
 
+    public static void main(String[] args) {
+        TransfertMultiple unTransfertMultiple = new TransfertMultiple("U1");
+        unTransfertMultiple.demarrer("cpt_a","cpt_b",50,100,"transferer1");
+    }
 
     public static void printUser(Connection conn) throws SQLException {
 
@@ -28,16 +32,5 @@ public class Main {
             System.out.println("Mode d'isolation : "+ r.getString("@@tx_isolation"));
         }
 
-    }
-
-    public static void main(String[] args) {
-
-        try {
-            TransfertMultiple unTransfertMultiple = new TransfertMultiple("U1","");
-            unTransfertMultiple.demarrer("","",50,100,"transferer1");
-        } catch (Exception e) {
-            e.printStackTrace();
-
-        }
     }
 }

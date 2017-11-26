@@ -156,7 +156,7 @@ TO U1@'localhost', U1@'%', U2@'localhost', U2@'%', U3@'localhost', U3@'%';
 
 ## Creation des deux comptes et trois clients
 INSERT INTO clients (nom) VALUES("U1"),("U2"),("U3");
-INSERT INTO comptes (no,solde,proprietaire) VALUES("1234",0,1),("4321",0,1);
+INSERT INTO comptes (no,solde,proprietaire) VALUES("cpt_a",0,1),("cpt_b",0,1);
 INSERT INTO acces_a_compte (id_client,id_compte, droit_lecture_ecriture) VALUES(1,1,2),(2,1,2),(1,2,2),(3,2,1);
 
 SELECT * from clients;
@@ -275,3 +275,4 @@ GRANT EXECUTE
 ON PROCEDURE transferer4
 TO U1@'localhost', U1@'%', U2@'localhost', U2@'%';
 
+SELEcT * from comptes
