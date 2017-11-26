@@ -10,13 +10,13 @@ public class TransfertMultiple {
     public TransfertMultiple(String utilisateur) {
         this.utilisateur = utilisateur;
         try {
-            con = DriverManager.getConnection("jdbc:mysql://localhost:8080/transactions",utilisateur,"1234");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:8080/transactions",utilisateur,"");
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void demarrer(String compte_source, String compte_dest, float montant, int iterations, String procedure) {
+    public Thread demarrer(String compte_source, String compte_dest, float montant, int iterations, String procedure) {
         Thread t = new Thread(() -> {
             for(int i = 0; i < iterations; ++i){
                 try {
@@ -32,6 +32,8 @@ public class TransfertMultiple {
                 }
             }
         });
+        t.start();
+        return t;
     }
 
 }
