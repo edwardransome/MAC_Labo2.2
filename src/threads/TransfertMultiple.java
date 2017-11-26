@@ -7,12 +7,13 @@ public class TransfertMultiple {
     private String utilisateur;
     private Connection con;
 
-    public TransfertMultiple(String utilisateur) {
+    public TransfertMultiple(String utilisateur, int isolation) {
         this.utilisateur = utilisateur;
         try {
             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/transactions?noAccessToProcedureBodies=true",utilisateur,"");
             con.setAutoCommit(false);
-            //con.setTransactionIsolation();
+
+            con.setTransactionIsolation(isolation);
         } catch (SQLException e) {
             e.printStackTrace();
         }
