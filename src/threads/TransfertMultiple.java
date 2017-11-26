@@ -27,7 +27,12 @@ public class TransfertMultiple {
                     cs.executeQuery();
                 } catch (SQLException e) {
                     if(e.getSQLState().equals("40001")){
-                        //rejouer la transaction
+                        try{
+                            con.rollback();
+                            i--; //on ajoute une itération vu que celle ci à échouée.
+                        }catch(SQLException sqle){
+                            sqle.printStackTrace();
+                        }
                     }
                 }
             }
