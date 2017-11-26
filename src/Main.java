@@ -34,6 +34,7 @@ public class Main {
             e.printStackTrace();
         }
         long endTime = System.currentTimeMillis();
+        //Write a new line to CSV! you can do it spi
     }
 
     public static void printUser(Connection conn) throws SQLException {
