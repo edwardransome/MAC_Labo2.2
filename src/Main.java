@@ -7,15 +7,15 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/banque","root","");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/transactions","root","");
             Statement s =  con.createStatement();
-            ResultSet r = s.executeQuery("SELECT * FROM banque.mouvement_log;");
+            ResultSet r = s.executeQuery("SELECT * FROM transactions.clients;");
 
 
-            System.out.println("Les enrengistrement sont: ");
+            System.out.println("Les clients sont: ");
             while(r.next()){
-                String montant = r.getString("montant");
-                System.out.println("montant : "+ montant);
+                String nom = r.getString("nom");
+                System.out.println("nom : "+ nom);
             }
         } catch (Exception e) {
             // TODO: handle exception
