@@ -28,7 +28,7 @@ public class TransfertMultiple {
                     cs.setString(2, compte_dest);
                     cs.setFloat(3, montant);
                     cs.execute();
-                    //con.commit();
+                    con.commit();
                 } catch (SQLException e) {
                     if(e.getSQLState().equals("40001")){
                         try{

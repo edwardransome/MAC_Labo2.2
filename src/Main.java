@@ -6,7 +6,7 @@ public class Main {
 
     public static void main(String[] args) {
         TransfertMultiple unTransfertMultiple = new TransfertMultiple("U1");
-        unTransfertMultiple.demarrer("cpt_a","cpt_b",50,100,"transferer2");
+        unTransfertMultiple.demarrer("cpt_a","cpt_b",50,100,"transferer1");
     }
 
     public static void printUser(Connection conn) throws SQLException {
