@@ -13,7 +13,7 @@ import static java.sql.Connection.*;
 public class Main {
 
     static final float MONTANT = 50;
-    static final int NB_ITERATIONS = 100;
+    static final int NB_ITERATIONS = 2000;
     static final String U1 = "U1";
     static final String U2 = "U1";
     static final String COMPTE_1 = "cpt_a";
