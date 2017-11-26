@@ -1,4 +1,3 @@
-import com.mysql.jdbc.StringUtils;
 import threads.TransfertMultiple;
 
 import java.io.FileWriter;
@@ -10,6 +9,14 @@ import java.util.stream.Collectors;
 
 import static java.sql.Connection.*;
 
+/**
+ * Classe principal permettant de tester les quatre niveaux d'isolation
+ * pour chacune des procédures 'transferer' permettant de transferer de l'argent
+ * de la base de données 'transactions'et écrit les résultats des tests dans un fichier csv
+ *
+ * @author Edward Ransome
+ * @author Michael Spierer
+ */
 public class Main {
 
     static final float MONTANT = 50;
@@ -23,13 +30,13 @@ public class Main {
     static Connection connection;
     static PrintWriter printWriter;
 
-    //Initialisation des variables statiques non finales
+    //Initialisation des variables statiques non finales dans un bloc static
     static {
         try {
-            //creation d'une connexion a la db static pour les vérifications des montants d'un compte
+            //creation d'une connexion à la db static pour les vérifications des montants d'un compte
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/transactions?noAccessToProcedureBodies=true","root","1234");
 
-            //creation d'un writer pour ecrire les resultats en format csv
+            //creation d'un writer pour écrire les résultats des expériences en format csv
             printWriter  = new PrintWriter(new FileWriter(PATH_RESULT));
 
         } catch (SQLException e) {
@@ -37,8 +44,8 @@ public class Main {
         } catch (IOException e){
             e.printStackTrace();
         }
-
     }
+
 
     public static void main(String[] args) {
 
@@ -51,7 +58,7 @@ public class Main {
     }
 
     /**
-     * Fait l'experience pour chacun des niveaux d'isolation d'une procedure
+     * Fait la meme procédure pour chaque niveau d'isolation
      * @param procedure la procedure a executer
      */
     private static void doAllExperiences(String procedure) {
@@ -62,7 +69,7 @@ public class Main {
     }
 
     /**
-     * Fait une experience avec une procedure et un niveau d'isolation
+     * Fait une expérience avec une procédure et un niveau d'isolation spécifique
      * @param procedure la procedure a executer
      * @param niveauIsolation le niveau d'isolation
      */
@@ -73,7 +80,7 @@ public class Main {
         float montantFinCompte1 = 0;
         float montantFinCompte2 = 0;
 
-        //On recupere les montants initiaux des deux comptes (afin de verifier plus tard s'il y a coherence)
+        //On recupere les montants initiaux des deux comptes (afin de verifier plus tard s'il y a cohérence)
         try {
              montantDepartCompte1 = getMontantDB(COMPTE_1) ;
              montantDepartCompte2 = getMontantDB(COMPTE_2) ;
@@ -86,6 +93,7 @@ public class Main {
 
         long startTime = System.currentTimeMillis();
 
+        //On start les deux objects actifs
         Thread t1 = tm1.demarrer(COMPTE_1,COMPTE_2,MONTANT,NB_ITERATIONS, procedure);
         Thread t2 = tm2.demarrer(COMPTE_2, COMPTE_1, MONTANT, NB_ITERATIONS, procedure);
         try {
@@ -97,7 +105,7 @@ public class Main {
         long endTime = System.currentTimeMillis();
         long duree = (endTime-startTime);
 
-        //On recupere les montants initiaux des deux comptes (afin de verifier plus tard s'il y a coherence)
+        //On récupère les montants finaux des deux comptes
         try {
              montantFinCompte1 = getMontantDB(COMPTE_1);
              montantFinCompte2 = getMontantDB(COMPTE_2);
@@ -105,6 +113,8 @@ public class Main {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        //On vérifie que la somme des montants de départ correspond a celle des montants de fins
         boolean coherence = (montantDepartCompte1+montantDepartCompte2) == (montantFinCompte1 + montantFinCompte2);
 
         //Ecriture des resultats dans le fichier csv en format csv
@@ -115,20 +125,19 @@ public class Main {
                 String.valueOf(tm1.getNombreBlocages()),
                 String.valueOf(coherence)};
 
-                String dataCSV = Arrays.stream(data).map(Object::toString).collect(Collectors.joining(","));
+        String dataCSV = Arrays.stream(data).map(Object::toString).collect(Collectors.joining(","));
         printWriter.println(dataCSV);
     }
 
     /**
-     * Recupere le solde d'un compte passé en parametre
+     * Récupère le solde d'un compte passé en paramètre
      * @param compte le compte dont on souhaite voir le solde
-     * @return le solde
+     * @return le solde du compte
      * @throws SQLException si la query n'est pas executée
      */
     public static float getMontantDB(String compte) throws SQLException {
 
         Statement s = connection.createStatement();
-
         ResultSet r = s.executeQuery("SELECT solde FROM transactions.comptes WHERE comptes.no = \""+compte+"\";");
 
         float montant = 0;
@@ -137,5 +146,4 @@ public class Main {
         }
         return montant;
     }
-
 }
