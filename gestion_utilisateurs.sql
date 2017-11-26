@@ -230,25 +230,23 @@ BEGIN
 	START TRANSACTION;
 		IF (STRCMP(cpt1, cpt2) < 0) THEN
         #cpt1 doit être accédé en premier
-			SELECT solde FROM comptes WHERE no = cpt1 LOCK IN SHARE MODE;
+			SELECT solde FROM comptes WHERE no = cpt1 FOR UPDATE;
 			SELECT solde FROM comptes WHERE no = cpt1 INTO etat;
 			SET etat = etat - montant;
 			UPDATE comptes SET solde = etat WHERE no = cpt1;
 			
-			SELECT solde FROM comptes WHERE no = cpt2 LOCK IN SHARE MODE;
+			SELECT solde FROM comptes WHERE no = cpt2 FOR UPDATE;
 			SELECT solde FROM comptes WHERE no = cpt2 INTO etat;
 			SET etat = etat + montant;
-			SELECT solde FROM comptes WHERE no = cpt2 FOR UPDATE;
 			UPDATE comptes SET solde = etat WHERE no = cpt2;
 		ELSE
         #cpt2 doit être accédé en premier
-			SELECT solde FROM comptes WHERE no = cpt2 LOCK IN SHARE MODE;
+			SELECT solde FROM comptes WHERE no = cpt2 FOR UPDATE;
 			SELECT solde FROM comptes WHERE no = cpt2 INTO etat;
 			SET etat = etat + montant;
-			SELECT solde FROM comptes WHERE no = cpt2 FOR UPDATE;
 			UPDATE comptes SET solde = etat WHERE no = cpt2;
         
-			SELECT solde FROM comptes WHERE no = cpt1 LOCK IN SHARE MODE;
+			SELECT solde FROM comptes WHERE no = cpt1 FOR UPDATE;
 			SELECT solde FROM comptes WHERE no = cpt1 INTO etat;
 			SET etat = etat - montant;
 			UPDATE comptes SET solde = etat WHERE no = cpt1;

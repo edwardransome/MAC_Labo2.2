@@ -27,7 +27,7 @@ public class Main {
     static {
         try {
             //creation d'une connexion a la db static pour les vérifications des montants d'un compte
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/transactions?noAccessToProcedureBodies=true","root","");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/transactions?noAccessToProcedureBodies=true","root","1234");
 
             //creation d'un writer pour ecrire les resultats en format csv
             printWriter  = new PrintWriter(new FileWriter(PATH_RESULT));
