@@ -6,6 +6,7 @@ public class TransfertMultiple {
 
     private String utilisateur;
     private Connection con;
+    private int nombreBlocages;
 
     public TransfertMultiple(String utilisateur, int isolation) {
         this.utilisateur = utilisateur;
@@ -36,6 +37,7 @@ public class TransfertMultiple {
                 } catch (SQLException e) {
                     if(e.getSQLState().equals("40001")){
                         try{
+                            nombreBlocages++; //un interblocage a eu lieu
                             con.rollback();
                             i--; //on ajoute une itération vu que celle ci à échouée.
                         }catch(SQLException sqle){
@@ -49,4 +51,8 @@ public class TransfertMultiple {
         return t;
     }
 
+
+    public int getNombreBlocages() {
+        return nombreBlocages;
+    }
 }
