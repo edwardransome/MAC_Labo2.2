@@ -11,6 +11,7 @@ public class TransfertMultiple {
         this.utilisateur = utilisateur;
         try {
             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/transactions?noAccessToProcedureBodies=true",utilisateur,"");
+            con.setAutoCommit(false);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -19,6 +20,7 @@ public class TransfertMultiple {
     public Thread demarrer(String compte_source, String compte_dest, float montant, int iterations, String procedure) {
         Thread t = new Thread(() -> {
             for(int i = 0; i < iterations; ++i){
+                System.out.println(i);
                 try {
                     CallableStatement cs = con.prepareCall("{call " + procedure+ "(?,?,?)}");
                     cs.setString(1, compte_source);
