@@ -7,11 +7,18 @@ import static java.sql.Connection.*;
 public class Main {
 
     public static void main(String[] args) {
-        doExperience("transferer1", TRANSACTION_READ_COMMITTED);
-        doExperience("transferer2", TRANSACTION_READ_COMMITTED);
-        doExperience("transferer3", TRANSACTION_READ_COMMITTED);
-        doExperience("transferer4", TRANSACTION_READ_COMMITTED);
+        doAllExperiences("transferer1");
+        doAllExperiences("transferer2");
+        doAllExperiences("transferer3");
+        doAllExperiences("transferer4");
 
+    }
+
+    private static void doAllExperiences(String procedure) {
+        doExperience(procedure, TRANSACTION_READ_UNCOMMITTED);
+        doExperience(procedure, TRANSACTION_READ_COMMITTED);
+        doExperience(procedure, TRANSACTION_REPEATABLE_READ);
+        doExperience(procedure, TRANSACTION_SERIALIZABLE);
     }
 
     private static void doExperience(String procedure, int isolationLevel) {
