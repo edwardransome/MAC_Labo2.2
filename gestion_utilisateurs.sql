@@ -199,13 +199,11 @@ END
 $$
 DELIMITER ;
 
-##continue ici bleddard
-
 DELIMITER $$
 CREATE PROCEDURE transferer3(IN cpt1 VARCHAR(30), IN cpt2 VARCHAR(30), IN montant FLOAT)
 BEGIN
-	START TRANSACTION;
 		DECLARE etat FLOAT DEFAULT 0.0;
+	START TRANSACTION;
         SELECT solde FROM comptes WHERE no = cpt1 LOCK IN SHARE MODE;
 		SELECT solde FROM comptes WHERE no = cpt1 INTO etat;
 		SET etat = etat - montant;
@@ -221,26 +219,43 @@ END
 $$
 DELIMITER ;
 
+
+## On va ordonner les comptes par ordre alphabetique et verouiller dans cet ordre pour
+## éviter l'interblocage.
 DELIMITER $$
 CREATE PROCEDURE transferer4(IN cpt1 VARCHAR(30), IN cpt2 VARCHAR(30), IN montant FLOAT)
 BEGIN
+	DECLARE etat FLOAT DEFAULT 0.0;
+    
 	START TRANSACTION;
-		DECLARE etat FLOAT DEFAULT 0.0;
-		SELECT solde FROM comptes WHERE no = cpt1 INTO etat;
-		SET etat = etat - montant;
-		UPDATE comptes SET solde = etat WHERE no = cpt1;
-		
-		SELECT solde FROM comptes WHERE no = cpt2 INTO etat;
-		SET etat = etat + montant;
-		UPDATE comptes SET solde = etat WHERE no = cpt2;
+		IF (STRCMP(cpt1, cpt2) < 0) THEN
+        #cpt1 doit être accédé en premier
+			SELECT solde FROM comptes WHERE no = cpt1 LOCK IN SHARE MODE;
+			SELECT solde FROM comptes WHERE no = cpt1 INTO etat;
+			SET etat = etat - montant;
+			UPDATE comptes SET solde = etat WHERE no = cpt1;
+			
+			SELECT solde FROM comptes WHERE no = cpt2 LOCK IN SHARE MODE;
+			SELECT solde FROM comptes WHERE no = cpt2 INTO etat;
+			SET etat = etat + montant;
+			SELECT solde FROM comptes WHERE no = cpt2 FOR UPDATE;
+			UPDATE comptes SET solde = etat WHERE no = cpt2;
+		ELSE
+        #cpt2 doit être accédé en premier
+			SELECT solde FROM comptes WHERE no = cpt2 LOCK IN SHARE MODE;
+			SELECT solde FROM comptes WHERE no = cpt2 INTO etat;
+			SET etat = etat + montant;
+			SELECT solde FROM comptes WHERE no = cpt2 FOR UPDATE;
+			UPDATE comptes SET solde = etat WHERE no = cpt2;
+        
+			SELECT solde FROM comptes WHERE no = cpt1 LOCK IN SHARE MODE;
+			SELECT solde FROM comptes WHERE no = cpt1 INTO etat;
+			SET etat = etat - montant;
+			UPDATE comptes SET solde = etat WHERE no = cpt1;
+		END IF;
+			
     COMMIT;
 END
 $$
 DELIMITER ;
-
-
-
-
-
-
 
