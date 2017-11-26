@@ -7,10 +7,10 @@ public class TransfertMultiple {
     private String utilisateur;
     private Connection con;
 
-    public TransfertMultiple(String utilisateur) {
+    public TransfertMultiple(String utilisateur,String motDePasse) {
         this.utilisateur = utilisateur;
         try {
-            con = DriverManager.getConnection("jdbc:mysql://localhost:8080/transactions",utilisateur,"");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/transactions",utilisateur,motDePasse);
         } catch (SQLException e) {
             e.printStackTrace();
         }
